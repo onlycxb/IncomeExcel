@@ -14,15 +14,5 @@ namespace 收支统计
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            if(DateTime.Now> new DateTime(2020, 10, 20))
-            {
-                MessageBox.Show("请联系正式版！");
-                Environment.Exit(0);
-            }
-
-            base.OnStartup(e);
-        }
     }
 }
