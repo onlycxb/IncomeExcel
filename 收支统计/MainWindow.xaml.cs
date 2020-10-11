@@ -96,7 +96,7 @@ namespace 收支统计
                         sheet2.Cells[1, 1].Style.Font.Size = 18f;
                         sheet2.Cells[1, 1].Style.Font.Name = "宋体";
                         sheet2.Cells[1, 1].Style.Font.Bold = true;//.get_Font().set_Bold(true);
-                        sheet2.Cells[1, 1, 1, 13].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        sheet2.Cells[1, 1, 1, 13].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
                         sheet2.Cells[2, 1].Value = (object)"制表日期：";
 
                         sheet2.Cells[2, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
