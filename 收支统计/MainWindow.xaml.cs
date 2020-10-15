@@ -1,7 +1,7 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,10 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using System.Windows.Threading;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
 
 namespace 收支统计
 {
@@ -35,15 +32,17 @@ namespace 收支统计
             string path = Path.Combine(Environment.CurrentDirectory, "基础数据");
             string[] files = Directory.GetFiles(path);
 
-            //校验Excel格式，仅使用xlsx
+            #region 校验Excel格式，仅使用xlsx
+
             var xlsExcel = files.Where(a => Path.GetExtension(a) == ".xls");
             if (xlsExcel.Count() > 0)
             {
                 MessageBox.Show("仅限使用.xlsx数据文件，而当前文件中存在.xls公式!\r\n请先转换格式再使用！", "提示"
-                    ,MessageBoxButton.OK,MessageBoxImage.Error);
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
-            }     
+            }
 
+            #endregion
 
             new Thread((ThreadStart)delegate
             {
@@ -151,7 +150,7 @@ namespace 收支统计
                                 foreach (Info collect in a2.collects)
                                 {
                                     num++;
-                                    sheet1.Row(num).Height=(22.0);
+                                    sheet1.Row(num).Height = (22.0);
                                     SetStyleValue(sheet1.Cells[num, 1], collect.会计凭证号, IsHorizontalAligCenter: true);
                                     SetStyleValue(sheet1.Cells[num, 2], collect.出纳凭证号, IsHorizontalAligCenter: true);
                                     SetStyleValue(sheet1.Cells[num, 3], collect.收款单号, IsHorizontalAligCenter: true);
@@ -168,7 +167,7 @@ namespace 收支统计
                                     SetStyleValue(sheet1.Cells[num, 7], collect.实际管理区, IsHorizontalAligCenter: true);
                                     SetStyleValue(sheet1.Cells[num, 8], collect.客户名称, IsHorizontalAligCenter: true);
                                     SetStyleValue(sheet1.Cells[num, 9], collect.开票日期, IsHorizontalAligCenter: true);
-                                    sheet1.Cells[num, 9].Style.Numberformat.Format= "yyyy-MM-dd";
+                                    sheet1.Cells[num, 9].Style.Numberformat.Format = "yyyy-MM-dd";
 
                                     SetStyleValue(sheet1.Cells[num, 10], collect.商品名称);
                                     SetStyleValue(sheet1.Cells[num, 11], collect.项目所属月份, IsHorizontalAligCenter: true);
@@ -195,7 +194,7 @@ namespace 收支统计
                                                       })
                                 {
                                     num++;
-                                    sheet1.Row(num).Height=(22.0);
+                                    sheet1.Row(num).Height = (22.0);
                                     for (int k = 1; k <= 15; k++)
                                     {
                                         SetStyleValue(sheet1.Cells[num, k], "");
@@ -209,7 +208,7 @@ namespace 收支统计
                                 foreach (Info collect2 in a2.collects)
                                 {
                                     num2++;
-                                    sheet2.Row(num2).Height=(22.0);
+                                    sheet2.Row(num2).Height = (22.0);
                                     SetStyleValue(sheet2.Cells[num2, 1], collect2.会计凭证号, IsHorizontalAligCenter: true);
                                     SetStyleValue(sheet2.Cells[num2, 2], "", IsHorizontalAligCenter: true);
                                     SetStyleValue(sheet2.Cells[num2, 3], collect2.收款账户, IsHorizontalAligCenter: true);
@@ -230,18 +229,18 @@ namespace 收支统计
                                     SetStyleValue(sheet2.Cells[num2, 10], collect2.摘要);
                                     if (collect2.金额 > 0m)
                                     {
-                                        sheet2.Cells[num2, 11].Value=((object)collect2.金额);
+                                        sheet2.Cells[num2, 11].Value = ((object)collect2.金额);
                                     }
                                     sheet2.Cells[num2, 11].Style.Border.BorderAround((ExcelBorderStyle)4);
                                     if (collect2.税额 > 0m)
                                     {
-                                        sheet2.Cells[num2, 12].Value=((object)collect2.税额);
+                                        sheet2.Cells[num2, 12].Value = ((object)collect2.税额);
                                     }
                                     sheet2.Cells[$"L{num2}"].Style.Border.BorderAround((ExcelBorderStyle)4);
                                     SetStyleValue(sheet2.Cells[num2, 13], collect2.价税合计);
                                 }
                                 num2++;
-                                sheet2.Row(num2).Height=(22.0);
+                                sheet2.Row(num2).Height = (22.0);
                                 for (int l = 1; l <= 13; l++)
                                 {
                                     SetStyleValue(sheet2.Cells[num2, l], "");
@@ -284,7 +283,6 @@ namespace 收支统计
                         sheet2.View.ZoomScale = 85;//
                         pack.Save();
                     }
-
                     finally
                     {
                         ((IDisposable)pack)?.Dispose();
@@ -382,7 +380,6 @@ namespace 收支统计
                         ShowProgress(6L, rowend, r);
                     });
                 }
-
                 catch (Exception ex)
                 {
                     TraceHelper.GetInstance().Warning($"表格第{r}行数据可能存在错误！详情{ex.Message}", "收款收据信息");
@@ -448,7 +445,6 @@ namespace 收支统计
                         }
                     }
                 }
-
                 catch (Exception ex)
                 {
                     dispatcher.Invoke(delegate
@@ -497,7 +493,6 @@ namespace 收支统计
                         list.Add(info);
                     }
                 }
-
                 catch (Exception ex)
                 {
                     dispatcher.Invoke(delegate
@@ -530,22 +525,22 @@ namespace 收支统计
         {
             rng.Value = value;
             rng.Style.Border.BorderAround((ExcelBorderStyle)4);
-            rng.Style.VerticalAlignment=((ExcelVerticalAlignment)1);
+            rng.Style.VerticalAlignment = ((ExcelVerticalAlignment)1);
             if (IsHorizontalAligCenter)
             {
-                rng.Style.HorizontalAlignment=(ExcelHorizontalAlignment)2;
+                rng.Style.HorizontalAlignment = (ExcelHorizontalAlignment)2;
             }
-            rng.Style.Font.Bold = isBold; 
+            rng.Style.Font.Bold = isBold;
         }
 
         public void SetStyleValue(ExcelRange rng, object value, Color color, bool IsHorizontalAligCenter = false, bool isBold = false)
         {
-            rng.Value=(value);
+            rng.Value = (value);
             rng.Style.Border.BorderAround((ExcelBorderStyle)4);
-            rng.Style.VerticalAlignment=((ExcelVerticalAlignment)1);
+            rng.Style.VerticalAlignment = ((ExcelVerticalAlignment)1);
             if (IsHorizontalAligCenter)
             {
-                rng.Style.HorizontalAlignment=((ExcelHorizontalAlignment)2);
+                rng.Style.HorizontalAlignment = ((ExcelHorizontalAlignment)2);
             }
             rng.Style.Font.Bold = isBold;
             rng.Style.Font.Color.SetColor(color);
@@ -569,6 +564,5 @@ namespace 收支统计
         {
             lbl1.Content = file;
         }
-
     }
 }
