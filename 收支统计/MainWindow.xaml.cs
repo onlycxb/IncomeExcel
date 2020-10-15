@@ -34,6 +34,17 @@ namespace 收支统计
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             string path = Path.Combine(Environment.CurrentDirectory, "基础数据");
             string[] files = Directory.GetFiles(path);
+
+            //校验Excel格式，仅使用xlsx
+            var xlsExcel = files.Where(a => Path.GetExtension(a) == ".xls");
+            if (xlsExcel.Count() > 0)
+            {
+                MessageBox.Show("仅限使用.xlsx数据文件，而当前文件中存在.xls公式!\r\n请先转换格式再使用！", "提示"
+                    ,MessageBoxButton.OK,MessageBoxImage.Error);
+                return;
+            }     
+
+
             new Thread((ThreadStart)delegate
             {
                 var enumerable = from a in GetVoucherDetail(files)
